@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>LLL U ✳️ — Live Life Lavish University</title>
+<script src="content.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:         #1a1030;
+    --surface:    #231640;
+    --surface2:   #2d1e55;
+    --border:     rgba(255,255,255,0.08);
+    --gold:       #c9a84c;
+    --gold-light: #f0cc72;
+    --gold-dim:   rgba(201,168,76,0.13);
+    --teal:       #2a8f7f;
+    --teal-dim:   rgba(42,143,127,0.18);
+    --text:       #f0eaf8;
+    --muted:      rgba(240,234,248,0.5);
+    --radius:     16px;
+    --radius-sm:  10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:430px;margin:0 auto;overflow-x:hidden}
+
+  /* ── STATUS BAR ── */
+  .status-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px 6px;font-size:13px;font-weight:600}
+  .status-brand{color:var(--gold);font-weight:600;letter-spacing:.08em;font-size:13px}
+
+  /* ── DEMO BANNER ── */
+  .demo-banner{background:linear-gradient(90deg,#7b3fa0,var(--accent,#5a2d82));padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .demo-banner.hidden{display:none}
+  .demo-text{font-size:12px;color:#fff;font-weight:500;line-height:1.4}
+  .demo-text strong{color:var(--gold-light)}
+  .btn-enroll{background:var(--gold);color:#1a1030;border:none;border-radius:20px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;flex-shrink:0}
+
+  /* ── NAV TABS ── */
+  .nav-tabs{display:flex;padding:8px 16px 0;overflow-x:auto;scrollbar-width:none;gap:4px}
+  .nav-tabs::-webkit-scrollbar{display:none}
+  .tab{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;color:var(--muted);transition:all .2s;background:transparent;border:none;color:var(--muted);font-family:'DM Sans',sans-serif}
+  .tab.active{background:var(--gold);color:#1a1030;font-weight:600}
+
+  /* ── PAGES ── */
+  .page{display:none;flex-direction:column;gap:14px;padding:16px 16px 110px}
+  .page.active{display:flex}
+
+  /* ── CARDS ── */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+  .card-sm{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px}
+
+  /* ── GREETING ── */
+  .greeting-card{background:linear-gradient(135deg,var(--surface2) 0%,#3a2068 100%);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
+  .greeting-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(201,168,76,.12) 0%,transparent 70%);pointer-events:none}
+  .greeting-top{display:flex;justify-content:space-between;align-items:flex-start}
+  .greeting-h1{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;line-height:1.2}
+  .date-line{font-size:12px;color:var(--muted);margin-top:4px}
+  .avatar{width:44px;height:44px;border-radius:50%;background:var(--gold);color:#1a1030;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .streak-badge{background:var(--gold-dim);border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:4px 10px;font-size:12px;color:var(--gold-light);font-weight:500;white-space:nowrap;margin-top:8px}
+  .ritual-inline{margin-top:14px;background:rgba(0,0,0,.2);border-left:2px solid var(--gold);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 14px}
+  .ritual-label{font-size:10px;color:var(--gold);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+  .ritual-quote{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;line-height:1.5}
+
+  /* ── SECTION HEADER ── */
+  .sec-hdr{display:flex;justify-content:space-between;align-items:center;padding:0 2px}
+  .sec-title{font-size:13px;font-weight:500;color:var(--muted);letter-spacing:.04em}
+  .sec-link{font-size:12px;color:var(--gold);font-weight:500;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif}
+
+  /* ── MODULE CARD (current) ── */
+  .mod-eyebrow{font-size:11px;font-weight:600;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between}
+  .mod-pct{color:var(--gold-light);font-size:13px}
+  .mod-title{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;margin-bottom:4px}
+  .mod-subtitle{font-size:12px;color:var(--muted);margin-bottom:12px}
+  .progress-bar{height:4px;background:rgba(255,255,255,.1);border-radius:4px;margin-bottom:14px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:4px;transition:width .6s ease}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid}
+  .chip-teal{background:var(--teal-dim);border-color:rgba(42,143,127,.4);color:#5ecfbd}
+  .chip-gray{background:rgba(255,255,255,.06);border-color:var(--border);color:var(--muted)}
+  .chip-gold{background:var(--gold-dim);border-color:rgba(201,168,76,.3);color:var(--gold-light)}
+  .chip-locked{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.06);color:rgba(240,234,248,.3)}
+
+  /* ── STATS GRID ── */
+  .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center}
+  .stat-num{font-size:28px;font-weight:700;color:var(--gold-light)}
+  .stat-label{font-size:11px;color:var(--muted);margin-top:2px}
+
+  /* ── ALL MODULES LIST ── */
+  .mod-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .2s}
+  .mod-row:hover{background:var(--surface2)}
+  .mod-row.locked{opacity:.55;cursor:default}
+  .mod-num{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .mod-num.done{background:var(--gold);color:#1a1030;border-color:var(--gold)}
+  .mod-num.locked-num{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.25)}
+  .mod-info{flex:1;min-width:0}
+  .mod-week{font-size:10px;color:var(--muted);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+  .mod-name{font-size:14px;font-weight:600;color:var(--text);margin-top:2px}
+  .mod-theme{font-size:11px;color:var(--muted);margin-top:2px}
+  .mod-arrow{color:var(--muted);font-size:16px;flex-shrink:0}
+  .lock-icon{font-size:14px;color:rgba(255,255,255,.2);flex-shrink:0}
+
+  /* ── MODULE DETAIL ── */
+  .detail-back{display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--gold);font-size:14px;font-weight:500;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0}
+  .detail-hero{background:linear-gradient(135deg,var(--surface2),#3a2068);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+  .detail-week{font-size:11px;color:var(--gold);font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+  .detail-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:4px}
+  .detail-subtitle{font-size:13px;color:var(--muted);margin-bottom:10px}
+  .detail-theme{display:inline-block;background:var(--gold-dim);border:1px solid rgba(201,168,76,.25);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--gold-light);font-weight:500}
+  .section-label{font-size:11px;font-weight:600;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+  .topic-item{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text);line-height:1.5}
+  .topic-item:last-child{border-bottom:none}
+  .topic-dot{color:var(--gold);margin-top:2px;flex-shrink:0}
+  .tool-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(0,0,0,.2);border-radius:var(--radius-sm);margin-bottom:8px}
+  .tool-icon{font-size:14px;flex-shrink:0}
+  .tool-name{font-size:13px;color:var(--text);font-weight:500}
+  .tool-type{font-size:10px;color:var(--muted);margin-left:auto;text-transform:uppercase;letter-spacing:.06em}
+  .video-item{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(0,0,0,.2);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer}
+  .video-play{width:32px;height:32px;border-radius:50%;background:var(--gold-dim);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+  .video-info{flex:1}
+  .video-title{font-size:13px;font-weight:500;color:var(--text)}
+  .video-dur{font-size:11px;color:var(--muted);margin-top:2px}
+  .video-check{font-size:14px;color:var(--muted)}
+  .video-check.watched{color:var(--teal)}
+  .prompt-item{background:rgba(0,0,0,.2);border-left:2px solid var(--gold);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 14px;margin-bottom:8px;font-family:'Playfair Display',serif;font-style:italic;font-size:13px;line-height:1.55}
+
+  /* ── JOURNAL ── */
+  .journal-input{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .journal-prompt-label{font-size:10px;color:var(--gold);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+  .journal-q{font-family:'Playfair Display',serif;font-style:italic;font-size:15px;margin-bottom:12px;line-height:1.5}
+  textarea{width:100%;background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;resize:none;min-height:100px;outline:none}
+  textarea:focus{border-color:rgba(201,168,76,.4)}
+  textarea::placeholder{color:var(--muted)}
+  .journal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+  .word-count{font-size:11px;color:var(--muted)}
+  .btn-save{background:var(--gold);color:#1a1030;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+  .entry-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px}
+  .entry-meta{font-size:11px;color:var(--muted);margin-bottom:6px}
+  .entry-text{font-size:14px;line-height:1.55}
+
+  /* ── RITUALS ── */
+  .ritual-card-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;margin-bottom:4px}
+  .ritual-card-sub{font-size:12px;color:var(--muted);margin-bottom:14px}
+  .ritual-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer}
+  .ritual-item:last-child{border-bottom:none}
+  .ritual-check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s}
+  .ritual-check.checked{background:var(--teal);border-color:var(--teal);color:#fff}
+  .ritual-name{font-size:14px;flex:1}
+  .ritual-name.done{text-decoration:line-through;color:var(--muted)}
+  .ritual-time{font-size:11px;color:var(--muted)}
+
+  /* ── HUMAN DESIGN ── */
+  .hd-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .hd-item{background:rgba(0,0,0,.2);border-radius:var(--radius-sm);padding:12px;border:1px solid var(--border)}
+  .hd-item-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+  .hd-item-value{font-size:13px;font-weight:600}
+  .hd-insight{margin-top:14px;background:var(--gold-dim);border:1px solid rgba(201,168,76,.2);border-radius:var(--radius-sm);padding:14px}
+
+  /* ── PRICING ── */
+  .pricing-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative}
+  .pricing-card.featured{border-color:rgba(201,168,76,.5);background:linear-gradient(135deg,var(--surface2),#2a1850)}
+  .pricing-badge{position:absolute;top:-10px;right:16px;background:var(--gold);color:#1a1030;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.06em}
+  .pricing-tier{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:4px}
+  .pricing-price{font-size:32px;font-weight:700;color:var(--gold-light);line-height:1}
+  .pricing-full{font-size:12px;color:var(--muted);text-decoration:line-through;margin-left:8px}
+  .pricing-discount{font-size:12px;color:var(--teal);font-weight:600;margin-left:6px}
+  .pricing-desc{font-size:13px;color:var(--muted);margin:10px 0 12px;line-height:1.5}
+  .pricing-includes{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+  .pricing-includes li{font-size:13px;display:flex;gap:8px;align-items:flex-start}
+  .pricing-includes li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
+  .btn-join{width:100%;background:var(--gold);color:#1a1030;border:none;border-radius:20px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .2s}
+  .btn-join:hover{opacity:.85}
+  .btn-join.secondary{background:transparent;color:var(--gold);border:1px solid rgba(201,168,76,.4)}
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(26,16,48,.96);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 0 24px;z-index:100}
+  .bnav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;opacity:.45;transition:opacity .2s;background:none;border:none;color:var(--text);font-family:'DM Sans',sans-serif}
+  .bnav-item.active{opacity:1}
+  .bnav-item.active .bnav-icon{color:var(--gold)}
+  .bnav-icon{font-size:20px}
+  .bnav-label{font-size:10px;font-weight:500}
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .page.active>*{animation:fadeUp .35s ease both}
+  .page.active>*:nth-child(1){animation-delay:.04s}
+  .page.active>*:nth-child(2){animation-delay:.08s}
+  .page.active>*:nth-child(3){animation-delay:.12s}
+  .page.active>*:nth-child(4){animation-delay:.16s}
+  .page.active>*:nth-child(5){animation-delay:.20s}
+</style>
+</head>
+<body>
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <span id="clock">9:41</span>
+  <span class="status-brand" id="brand-name">LLL U ✳️</span>
+  <span style="font-size:11px;color:var(--muted)">●●●▌</span>
+</div>
+
+<!-- DEMO BANNER -->
+<div class="demo-banner" id="demo-banner">
+  <div class="demo-text">👋 You're viewing the <strong>demo experience</strong> — Week 1 is unlocked. <strong>15 spots</strong> · Founding Circle pricing ends June 14.</div>
+  <button class="btn-enroll" onclick="showPage('enroll')">Enroll Now</button>
+</div>
+
+<!-- NAV TABS -->
+<div class="nav-tabs" id="nav-tabs">
+  <button class="tab active" onclick="showPage('home')">Home</button>
+  <button class="tab" onclick="showPage('modules')">Modules</button>
+  <button class="tab" onclick="showPage('journal')">Journal</button>
+  <button class="tab" onclick="showPage('rituals')">Rituals</button>
+  <button class="tab" onclick="showPage('hd')">Human Design</button>
+</div>
+
+<!-- ══ HOME ══ -->
+<div class="page active" id="page-home">
+  <div class="greeting-card">
+    <div class="greeting-top">
+      <div>
+        <h1 class="greeting-h1">Good morning, Lex ✳️</h1>
+        <p class="date-line" id="date-line"></p>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end">
+        <div class="avatar">LK</div>
+        <div class="streak-badge">🔥 <span id="streak-num">7</span> day streak</div>
+      </div>
+    </div>
+    <div class="ritual-inline">
+      <div class="ritual-label">Today's Ritual Prompt</div>
+      <div class="ritual-quote" id="home-prompt"></div>
+    </div>
+  </div>
+
+  <div class="sec-hdr">
+    <span class="sec-title">Current module</span>
+    <button class="sec-link" onclick="showPage('modules')">All modules →</button>
+  </div>
+  <div class="card" id="current-module-card"></div>
+
+  <div class="sec-hdr"><span class="sec-title">Your journey</span></div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-num">6</div><div class="stat-label">Weeks Total</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-complete">0</div><div class="stat-label">Modules Complete</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-entries">0</div><div class="stat-label">Journal Entries</div></div>
+    <div class="stat-card"><div class="stat-num" id="stat-streak2">7</div><div class="stat-label">Day Streak</div></div>
+  </div>
+</div>
+
+<!-- ══ MODULES ══ -->
+<div class="page" id="page-modules">
+  <div id="modules-list-view">
+    <div class="sec-hdr"><span class="sec-title" style="font-size:15px;color:var(--text);font-weight:600">6-Week Framework</span></div>
+    <div id="all-modules-list"></div>
+  </div>
+  <div id="module-detail-view" style="display:none;flex-direction:column;gap:14px"></div>
+</div>
+
+<!-- ══ JOURNAL ══ -->
+<div class="page" id="page-journal">
+  <div class="journal-input">
+    <div class="journal-prompt-label">Today's Prompt</div>
+    <div class="journal-q" id="journal-prompt-text"></div>
+    <textarea id="journal-entry" placeholder="Start writing here... there's no wrong answer." oninput="updateWordCount()"></textarea>
+    <div class="journal-footer">
+      <span class="word-count" id="word-count">0 words</span>
+      <button class="btn-save" onclick="saveEntry()">Save Entry</button>
+    </div>
+  </div>
+  <div class="sec-hdr"><span class="sec-title">Past entries</span></div>
+  <div id="entries-list"></div>
+</div>
+
+<!-- ══ RITUALS ══ -->
+<div class="page" id="page-rituals">
+  <div class="card">
+    <div class="ritual-card-title">Morning Rituals</div>
+    <div class="ritual-card-sub">Complete before 10 AM to count toward your streak</div>
+    <div id="morning-rituals"></div>
+  </div>
+  <div class="card">
+    <div class="ritual-card-title">Evening Rituals</div>
+    <div class="ritual-card-sub">Wind down and reflect</div>
+    <div id="evening-rituals"></div>
+  </div>
+</div>
+
+<!-- ══ HUMAN DESIGN ══ -->
+<div class="page" id="page-hd">
+  <div class="card">
+    <div style="font-family:'Playfair Display',serif;font-size:21px;font-weight:700">Your Human Design</div>
+    <div style="font-size:13px;color:var(--gold);font-weight:500;margin-top:2px">Manifesting Generator · Profile 6/2</div>
+    <div class="hd-grid">
+      <div class="hd-item"><div class="hd-item-label">Type</div><div class="hd-item-value">Manifesting Generator</div></div>
+      <div class="hd-item"><div class="hd-item-label">Profile</div><div class="hd-item-value">6/2 Role Model / Hermit</div></div>
+      <div class="hd-item"><div class="hd-item-label">Authority</div><div class="hd-item-value">Emotional Solar Plexus</div></div>
+      <div class="hd-item"><div class="hd-item-label">Strategy</div><div class="hd-item-value">Respond & Inform</div></div>
+    </div>
+    <div class="hd-insight" style="margin-top:14px">
+      <div style="font-size:10px;color:var(--gold);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Incarnation Cross</div>
+      <div style="font-size:13px;line-height:1.6">Left Angle Cross of Migration (40/37 | 35/5) — You are designed to move people from one place to another — emotionally, spiritually, physically. Your life is the curriculum.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:10px">Today's HD Insight</div>
+    <div class="ritual-inline" style="margin-top:0">
+      <div class="ritual-label" id="hd-insight-label"></div>
+      <div class="ritual-quote" id="hd-insight-text"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ENROLL ══ -->
+<div class="page" id="page-enroll">
+  <div style="text-align:center;padding:8px 0">
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:6px">Founding Circle</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.5">Only 15 spots · Enrollment closes June 14<br/>Payment plans available at checkout.</div>
+  </div>
+  <div id="pricing-cards"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="bnav-item active" onclick="showPage('home')"><span class="bnav-icon">🏠</span><span class="bnav-label">Home</span></button>
+  <button class="bnav-item" onclick="showPage('modules')"><span class="bnav-icon">📚</span><span class="bnav-label">Modules</span></button>
+  <button class="bnav-item" onclick="showPage('journal')"><span class="bnav-icon">📓</span><span class="bnav-label">Journal</span></button>
+  <button class="bnav-item" onclick="showPage('rituals')"><span class="bnav-icon">✨</span><span class="bnav-label">Rituals</span></button>
+  <button class="bnav-item" onclick="showPage('hd')"><span class="bnav-icon">◈</span><span class="bnav-label">HD</span></button>
+</nav>
+
+<script>
+// ── DEMO MODE ──────────────────────────────────────────────
+// Set to false to unlock all modules (for enrolled students)
+const DEMO_MODE = true;
+const UNLOCKED_WEEKS = DEMO_MODE ? [1] : [1,2,3,4,5,6];
+
+// ── STATE ──────────────────────────────────────────────────
+let entries = JSON.parse(localStorage.getItem('lllu_entries') || '[]');
+let streak  = parseInt(localStorage.getItem('lllu_streak') || '7');
+let currentModuleWeek = 1;
+let videoWatched = JSON.parse(localStorage.getItem('lllu_videos') || '{}');
+let ritualState  = JSON.parse(localStorage.getItem('lllu_rituals') || '{}');
+
+// ── CLOCK + DATE ───────────────────────────────────────────
+const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const NOW    = new Date();
+
+function updateClock(){
+  let h = NOW.getHours(), m = NOW.getMinutes();
+  document.getElementById('clock').textContent = `${h%12||12}:${String(m).padStart(2,'0')}`;
+}
+updateClock(); setInterval(updateClock,60000);
+document.getElementById('date-line').textContent =
+  `${DAYS[NOW.getDay()]}, ${MONTHS[NOW.getMonth()]} ${NOW.getDate()} · Week 1 of 6`;
+document.getElementById('streak-num').textContent = streak;
+document.getElementById('stat-streak2').textContent = streak;
+document.getElementById('stat-entries').textContent = entries.length;
+
+// ── TODAY'S PROMPT (cycles by day of year) ─────────────────
+function getTodayPrompt(){
+  const doy = Math.floor((NOW - new Date(NOW.getFullYear(),0,0)) / 86400000);
+  return LLLU_CONTENT.ritualPrompts[doy % LLLU_CONTENT.ritualPrompts.length];
+}
+const todayPrompt = getTodayPrompt();
+document.getElementById('home-prompt').textContent = `"${todayPrompt}"`;
+document.getElementById('journal-prompt-text').textContent = `"${todayPrompt}"`;
+
+// ── HD INSIGHT (cycles by day of week) ────────────────────
+const hdInsight = LLLU_CONTENT.hdInsights[NOW.getDay() % LLLU_CONTENT.hdInsights.length];
+document.getElementById('hd-insight-label').textContent = hdInsight.label;
+document.getElementById('hd-insight-text').textContent = hdInsight.text;
+
+// ── TOOL ICON MAP ─────────────────────────────────────────
+const toolIcons = { ritual:'🕯️', workbook:'📋', journal:'✍️', practice:'🧘🏽‍♀️', challenge:'🔥', bonus:'⭐', audio:'🎧' };
+
+// ── CURRENT MODULE CARD ───────────────────────────────────
+function renderCurrentModuleCard(){
+  const m = LLLU_CONTENT.modules[0];
+  const pct = 40;
+  document.getElementById('current-module-card').innerHTML = `
+    <div class="mod-eyebrow"><span>Week ${m.week} · Module ${m.number}</span><span class="mod-pct">${pct}%</span></div>
+    <div class="mod-title">${m.title}</div>
+    <div class="mod-subtitle">${m.subtitle}</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="chips">
+      <span class="chip chip-teal">2 videos watched</span>
+      <span class="chip chip-gray">1 workbook lesson</span>
+      <span class="chip chip-gold">Ritual pending</span>
+    </div>`;
+}
+renderCurrentModuleCard();
+
+// ── ALL MODULES LIST ──────────────────────────────────────
+function renderModulesList(){
+  const list = document.getElementById('all-modules-list');
+  list.innerHTML = '';
+  LLLU_CONTENT.modules.forEach(m => {
+    const unlocked = UNLOCKED_WEEKS.includes(m.week);
+    const div = document.createElement('div');
+    div.className = `mod-row${unlocked ? '' : ' locked'}`;
+    div.style.marginBottom = '10px';
+    div.innerHTML = `
+      <div class="mod-num ${unlocked ? '' : 'locked-num'}">${unlocked ? m.emoji : '🔒'}</div>
+      <div class="mod-info">
+        <div class="mod-week">Week ${m.week}</div>
+        <div class="mod-name">${m.title}</div>
+        <div class="mod-theme">${m.theme}</div>
+      </div>
+      ${unlocked
+        ? `<span class="mod-arrow">›</span>`
+        : `<span class="lock-icon" style="font-size:12px;color:var(--muted)">Locked</span>`}`;
+    if(unlocked) div.onclick = () => showModuleDetail(m.week - 1);
+    list.appendChild(div);
+  });
+}
+renderModulesList();
+
+// ── MODULE DETAIL ─────────────────────────────────────────
+function showModuleDetail(idx){
+  const m = LLLU_CONTENT.modules[idx];
+  const detail = document.getElementById('module-detail-view');
+  const listView = document.getElementById('modules-list-view');
+  listView.style.display = 'none';
+  detail.style.display = 'flex';
+
+  const vidHTML = m.videos.map((v,i) => {
+    const key = `w${m.week}_v${i}`;
+    const done = videoWatched[key];
+    return `<div class="video-item" onclick="toggleVideo('${key}',this)">
+      <div class="video-play">▶</div>
+      <div class="video-info">
+        <div class="video-title">${v.title}</div>
+        <div class="video-dur">${v.duration}</div>
+      </div>
+      <span class="video-check ${done ? 'watched' : ''}">✓</span>
+    </div>`;
+  }).join('');
+
+  const toolHTML = m.tools.map(t =>
+    `<div class="tool-item">
+      <span class="tool-icon">${toolIcons[t.type] || '📄'}</span>
+      <span class="tool-name">${t.name}</span>
+      <span class="tool-type">${t.type}</span>
+    </div>`).join('');
+
+  const promptHTML = m.journalPrompts.map(p =>
+    `<div class="prompt-item">"${p}"</div>`).join('');
+
+  const topicHTML = m.topics.map(t =>
+    `<div class="topic-item"><span class="topic-dot">✦</span><span>${t}</span></div>`).join('');
+
+  detail.innerHTML = `
+    <button class="detail-back" onclick="backToModules()">← All Modules</button>
+    <div class="detail-hero">
+      <div class="detail-week">Week ${m.week} · Module ${m.number}</div>
+      <div class="detail-title">${m.emoji} ${m.title}</div>
+      <div class="detail-subtitle">${m.subtitle}</div>
+      <span class="detail-theme">${m.theme}</span>
+      <p style="font-size:13px;color:var(--muted);margin-top:12px;line-height:1.6">${m.description}</p>
+    </div>
+    <div class="card">
+      <div class="section-label">Topics Covered</div>
+      ${topicHTML}
+    </div>
+    <div class="card">
+      <div class="section-label">Videos (${m.videos.length})</div>
+      ${vidHTML}
+    </div>
+    <div class="card">
+      <div class="section-label">Tools & Resources</div>
+      ${toolHTML}
+    </div>
+    <div class="card">
+      <div class="section-label">Journal Prompts</div>
+      ${promptHTML}
+    </div>`;
+}
+
+function backToModules(){
+  document.getElementById('module-detail-view').style.display = 'none';
+  document.getElementById('modules-list-view').style.display = 'block';
+}
+
+function toggleVideo(key, row){
+  videoWatched[key] = !videoWatched[key];
+  localStorage.setItem('lllu_videos', JSON.stringify(videoWatched));
+  row.querySelector('.video-check').classList.toggle('watched', videoWatched[key]);
+}
+
+// ── JOURNAL ───────────────────────────────────────────────
+function updateWordCount(){
+  const val = document.getElementById('journal-entry').value.trim();
+  const w = val ? val.split(/\s+/).length : 0;
+  document.getElementById('word-count').textContent = `${w} word${w !== 1 ? 's' : ''}`;
+}
+
+function renderEntries(){
+  const list = document.getElementById('entries-list');
+  if(!entries.length){
+    list.innerHTML = `<div style="text-align:center;color:var(--muted);font-size:13px;padding:20px">No entries yet. Start with today's prompt.</div>`;
+    return;
+  }
+  list.innerHTML = entries.map(e => `
+    <div class="entry-card" style="margin-bottom:10px">
+      <div class="entry-meta">${e.date}</div>
+      <div class="entry-text">${e.text}</div>
+    </div>`).join('');
+  document.getElementById('stat-entries').textContent = entries.length;
+}
+renderEntries();
+
+function saveEntry(){
+  const text = document.getElementById('journal-entry').value.trim();
+  if(!text) return;
+  const date = `${MONTHS[NOW.getMonth()]} ${NOW.getDate()} · ${DAYS[NOW.getDay()]}`;
+  entries.unshift({ date, text });
+  localStorage.setItem('lllu_entries', JSON.stringify(entries));
+  document.getElementById('journal-entry').value = '';
+  updateWordCount();
+  renderEntries();
+}
+
+// ── RITUALS ───────────────────────────────────────────────
+function renderRituals(items, containerId, prefix){
+  const c = document.getElementById(containerId);
+  c.innerHTML = items.map((r,i) => {
+    const key = `${prefix}_${i}`;
+    const done = ritualState[key];
+    return `<div class="ritual-item" onclick="toggleRitual('${key}',this)">
+      <div class="ritual-check ${done ? 'checked' : ''}">${done ? '✓' : ''}</div>
+      <span class="ritual-name ${done ? 'done' : ''}">${r.name}</span>
+      <span class="ritual-time">${r.duration}</span>
+    </div>`;
+  }).join('');
+}
+renderRituals(LLLU_CONTENT.morningRituals, 'morning-rituals', 'am');
+renderRituals(LLLU_CONTENT.eveningRituals, 'evening-rituals', 'pm');
+
+function toggleRitual(key, row){
+  ritualState[key] = !ritualState[key];
+  localStorage.setItem('lllu_rituals', JSON.stringify(ritualState));
+  const check = row.querySelector('.ritual-check');
+  const name  = row.querySelector('.ritual-name');
+  check.classList.toggle('checked', ritualState[key]);
+  check.textContent = ritualState[key] ? '✓' : '';
+  name.classList.toggle('done', ritualState[key]);
+}
+
+// ── PRICING ───────────────────────────────────────────────
+function renderPricing(){
+  const container = document.getElementById('pricing-cards');
+  container.innerHTML = LLLU_CONTENT.pricing.map(p => `
+    <div class="pricing-card ${p.featured ? 'featured' : ''}" style="margin-bottom:14px">
+      ${p.featured ? '<div class="pricing-badge">MOST POPULAR</div>' : ''}
+      ${p.spotsLeft ? `<div class="pricing-badge" style="background:var(--teal)">Only ${p.spotsLeft} left</div>` : ''}
+      <div class="pricing-tier">${p.emoji} ${p.tier}</div>
+      <div style="display:flex;align-items:baseline;margin:8px 0">
+        <span class="pricing-price">${p.price}</span>
+        <span class="pricing-full">${p.fullValue}</span>
+        <span class="pricing-discount">${p.discount}</span>
+      </div>
+      <div class="pricing-desc">${p.description}</div>
+      <ul class="pricing-includes">${p.includes.map(i => `<li>${i}</li>`).join('')}</ul>
+      <button class="btn-join ${p.featured ? '' : 'secondary'}" onclick="alert('Enrollment opens soon! Payment plans available.')">
+        Join ${p.tier} — ${p.price}
+      </button>
+    </div>`).join('');
+}
+renderPricing();
+
+// ── PAGE NAV ──────────────────────────────────────────────
+const tabMap = { home:0, modules:1, journal:2, rituals:3, hd:4 };
+
+function showPage(name){
+  // reset module detail if leaving modules
+  if(name !== 'modules'){
+    document.getElementById('module-detail-view').style.display = 'none';
+    document.getElementById('modules-list-view').style.display = 'block';
+  }
+
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById('page-' + name);
+  if(pg) pg.classList.add('active');
+
+  const tabs = document.querySelectorAll('.tab');
+  const navs = document.querySelectorAll('.bnav-item');
+  tabs.forEach(t => t.classList.remove('active'));
+  navs.forEach(b => b.classList.remove('active'));
+
+  const idx = tabMap[name];
+  if(idx !== undefined){
+    if(tabs[idx]) tabs[idx].classList.add('active');
+    if(navs[idx]) navs[idx].classList.add('active');
+  }
+
+  // hide demo banner on enroll page
+  document.getElementById('demo-banner').classList.toggle('hidden', name === 'enroll');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
