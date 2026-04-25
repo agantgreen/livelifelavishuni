@@ -1,0 +1,26 @@
+{
+  "name": "Live Life Lavish University",
+  "short_name": "LLL U",
+  "description": "Activate your divine purpose, align with your design, and build a lavish life that reflects your soul.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1030",
+  "theme_color": "#1a1030",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "lifestyle"],
+  "screenshots": []
+}

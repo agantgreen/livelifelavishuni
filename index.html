@@ -4,6 +4,21 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <title>LLL U ✳️ — Live Life Lavish University</title>
+
+<!-- ── PWA ── -->
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#1a1030" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="LLL U" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+<!-- ── OG / Share preview ── -->
+<meta property="og:title" content="Live Life Lavish University" />
+<meta property="og:description" content="Activate your divine purpose, align with your design, and build a lavish life that reflects your soul." />
+<meta property="og:image" content="icons/icon-512.png" />
+<meta name="twitter:card" content="summary" />
+
 <script src="content.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
@@ -173,6 +188,92 @@
   .btn-join:hover{opacity:.85}
   .btn-join.secondary{background:transparent;color:var(--gold);border:1px solid rgba(201,168,76,.4)}
 
+  /* ── FEED CARDS ── */
+  .feed-section{display:flex;flex-direction:column;gap:10px}
+  .feed-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;text-decoration:none;transition:background .2s}
+  .feed-card:hover{background:var(--surface2)}
+  .feed-thumb{width:54px;height:54px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--surface2)}
+  .feed-thumb-placeholder{width:54px;height:54px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,var(--surface2),#3a2068);display:flex;align-items:center;justify-content:center;font-size:20px}
+  .feed-info{flex:1;min-width:0}
+  .feed-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .feed-meta{font-size:11px;color:var(--muted);margin-top:4px}
+  .feed-desc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .feed-arrow{color:var(--muted);font-size:14px;flex-shrink:0;margin-top:2px}
+  .feed-loading{text-align:center;color:var(--muted);font-size:13px;padding:20px;font-style:italic}
+  .feed-error{text-align:center;color:var(--muted);font-size:12px;padding:14px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border)}
+  .podcast-play{width:36px;height:36px;border-radius:50%;background:var(--gold-dim);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;color:var(--gold-light)}
+  .feed-duration{display:inline-block;background:rgba(0,0,0,.2);border-radius:10px;padding:2px 7px;font-size:10px;color:var(--muted);margin-top:4px}
+
+  /* ── REFRESH BUTTON ── */
+  .btn-refresh{background:none;border:none;color:var(--gold);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;display:flex;align-items:center;gap:4px;padding:0;transition:opacity .2s}
+  .btn-refresh:hover{opacity:.7}
+  .btn-refresh.spinning{animation:spin .7s linear infinite;pointer-events:none}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ── COMMUNITY TAB ── */
+  .community-page{display:none;flex-direction:column;height:calc(100vh - 140px);padding:0}
+  .community-page.active{display:flex}
+
+  /* room list */
+  .room-list{display:flex;flex-direction:column;gap:0;flex:1;overflow-y:auto;padding:12px 16px 110px}
+  .room-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:opacity .15s}
+  .room-item:last-child{border-bottom:none}
+  .room-item:hover{opacity:.8}
+  .room-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .room-avatar.general{background:linear-gradient(135deg,var(--gold-dim),rgba(201,168,76,.25));border:1px solid rgba(201,168,76,.3)}
+  .room-avatar.week{background:linear-gradient(135deg,var(--teal-dim),rgba(42,143,127,.25));border:1px solid rgba(42,143,127,.3)}
+  .room-info{flex:1;min-width:0}
+  .room-name{font-size:15px;font-weight:600;color:var(--text)}
+  .room-preview{font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .room-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+  .room-time{font-size:11px;color:var(--muted)}
+  .room-badge{background:var(--gold);color:#1a1030;border-radius:10px;padding:2px 7px;font-size:10px;font-weight:700;min-width:18px;text-align:center}
+
+  .community-header{padding:14px 16px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--bg)}
+  .community-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;flex:1}
+  .community-sub{font-size:11px;color:var(--muted);margin-top:1px}
+
+  /* chat view */
+  .chat-view{display:none;flex-direction:column;height:calc(100vh - 110px);position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--bg);z-index:200}
+  .chat-view.open{display:flex}
+  .chat-header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0}
+  .chat-back{background:none;border:none;color:var(--gold);font-size:20px;cursor:pointer;padding:0;line-height:1}
+  .chat-room-info{flex:1}
+  .chat-room-name{font-size:15px;font-weight:600}
+  .chat-room-sub{font-size:11px;color:var(--muted);margin-top:1px}
+  .chat-members{font-size:11px;color:var(--teal);font-weight:500}
+
+  .chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;padding-bottom:80px}
+  .msg-group{display:flex;flex-direction:column;gap:2px}
+  .msg-row{display:flex;gap:8px;align-items:flex-end}
+  .msg-row.mine{flex-direction:row-reverse}
+  .msg-avatar{width:28px;height:28px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;color:var(--gold-light)}
+  .msg-bubble{max-width:75%;padding:10px 13px;border-radius:16px;font-size:13px;line-height:1.5;position:relative}
+  .msg-bubble.theirs{background:var(--surface2);border-radius:4px 16px 16px 16px;color:var(--text)}
+  .msg-bubble.mine{background:linear-gradient(135deg,#5a2d82,#3d1a6e);border-radius:16px 4px 16px 16px;color:#fff}
+  .msg-bubble.mine.gold{background:linear-gradient(135deg,var(--gold),#a87a28);color:#1a1030}
+  .msg-sender{font-size:10px;color:var(--gold);font-weight:600;margin-bottom:3px;letter-spacing:.03em}
+  .msg-time{font-size:10px;color:var(--muted);margin-top:4px;text-align:right}
+  .msg-time.theirs{text-align:left}
+  .msg-reaction{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:12px;padding:2px 8px;font-size:11px;margin-top:4px;cursor:pointer}
+
+  .chat-input-bar{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;gap:8px;padding:10px 12px 20px;background:var(--surface);border-top:1px solid var(--border)}
+  .chat-input{flex:1;background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:22px;padding:10px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;resize:none;line-height:1.4;max-height:80px;overflow-y:auto}
+  .chat-input:focus{border-color:rgba(201,168,76,.3)}
+  .chat-input::placeholder{color:var(--muted)}
+  .btn-send{width:38px;height:38px;border-radius:50%;background:var(--gold);border:none;color:#1a1030;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .2s}
+  .btn-send:hover{opacity:.85}
+
+  /* placeholder notice */
+  .firebase-notice{background:var(--gold-dim);border:1px solid rgba(201,168,76,.25);border-radius:var(--radius-sm);padding:12px 14px;margin:12px 16px 0;font-size:12px;color:var(--gold-light);line-height:1.5;text-align:center}
+  .firebase-notice strong{display:block;margin-bottom:3px;font-size:13px}
+
+  /* date divider */
+  .date-divider{text-align:center;font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;padding:4px 0;position:relative}
+  .date-divider::before,.date-divider::after{content:'';position:absolute;top:50%;width:28%;height:1px;background:var(--border)}
+  .date-divider::before{left:0}
+  .date-divider::after{right:0}
+
   /* ── BOTTOM NAV ── */
   .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(26,16,48,.96);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 0 24px;z-index:100}
   .bnav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;opacity:.45;transition:opacity .2s;background:none;border:none;color:var(--text);font-family:'DM Sans',sans-serif}
@@ -239,6 +340,30 @@
     <button class="sec-link" onclick="showPage('modules')">All modules →</button>
   </div>
   <div class="card" id="current-module-card"></div>
+
+  <!-- BLOG FEED -->
+  <div class="sec-hdr">
+    <span class="sec-title">Latest from the Blog</span>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="btn-refresh" id="blog-refresh-btn" onclick="refreshFeed('blog')" title="Refresh">↻ Refresh</button>
+      <a class="sec-link" href="https://lifewithlexiskai.com" target="_blank" rel="noopener">View all →</a>
+    </div>
+  </div>
+  <div class="feed-section" id="blog-feed">
+    <div class="feed-loading">Loading posts...</div>
+  </div>
+
+  <!-- PODCAST FEED -->
+  <div class="sec-hdr">
+    <span class="sec-title">Latest Episodes</span>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="btn-refresh" id="podcast-refresh-btn" onclick="refreshFeed('podcast')" title="Refresh">↻ Refresh</button>
+      <a class="sec-link" href="https://anchor.fm/life-with-lexis-kai" target="_blank" rel="noopener">All episodes →</a>
+    </div>
+  </div>
+  <div class="feed-section" id="podcast-feed">
+    <div class="feed-loading">Loading episodes...</div>
+  </div>
 
   <div class="sec-hdr"><span class="sec-title">Your journey</span></div>
   <div class="stats-grid">
@@ -321,12 +446,44 @@
   <div id="pricing-cards"></div>
 </div>
 
+<!-- ══ COMMUNITY ══ -->
+<div class="community-page" id="page-community">
+  <div class="community-header">
+    <div>
+      <div class="community-title">Founding Circle 💫</div>
+      <div class="community-sub">Your sacred cohort space</div>
+    </div>
+  </div>
+  <div class="firebase-notice">
+    <strong>💬 Chat Preview Mode</strong>
+    Messages shown here are samples. Connect Firebase to enable live cohort messaging.
+  </div>
+  <div class="room-list" id="room-list"></div>
+</div>
+
+<!-- CHAT VIEW (slides over everything) -->
+<div class="chat-view" id="chat-view">
+  <div class="chat-header">
+    <button class="chat-back" onclick="closeChat()">‹</button>
+    <div class="chat-room-info">
+      <div class="chat-room-name" id="chat-room-name"></div>
+      <div class="chat-room-sub" id="chat-room-sub"></div>
+    </div>
+    <div class="chat-members" id="chat-members"></div>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-input-bar">
+    <div class="chat-input" id="chat-input" contenteditable="true" placeholder="Share your truth..." onkeydown="chatKeydown(event)"></div>
+    <button class="btn-send" onclick="sendMessage()">↑</button>
+  </div>
+</div>
+
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button class="bnav-item active" onclick="showPage('home')"><span class="bnav-icon">🏠</span><span class="bnav-label">Home</span></button>
   <button class="bnav-item" onclick="showPage('modules')"><span class="bnav-icon">📚</span><span class="bnav-label">Modules</span></button>
   <button class="bnav-item" onclick="showPage('journal')"><span class="bnav-icon">📓</span><span class="bnav-label">Journal</span></button>
-  <button class="bnav-item" onclick="showPage('rituals')"><span class="bnav-icon">✨</span><span class="bnav-label">Rituals</span></button>
+  <button class="bnav-item" onclick="showPage('community')"><span class="bnav-icon">💬</span><span class="bnav-label">Circle</span></button>
   <button class="bnav-item" onclick="showPage('hd')"><span class="bnav-icon">◈</span><span class="bnav-label">HD</span></button>
 </nav>
 
@@ -571,34 +728,263 @@ function renderPricing(){
 }
 renderPricing();
 
+// ── RSS FEEDS ─────────────────────────────────────────────
+const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
+const BLOG_RSS = 'https://lifewithlexiskai.com/feed/';
+const POD_RSS  = 'https://anchor.fm/s/f336fe2c/podcast/rss';
+
+function timeAgo(dateStr){
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const d = Math.floor(diff/86400000);
+  if(d === 0) return 'Today';
+  if(d === 1) return 'Yesterday';
+  if(d < 7)  return `${d} days ago`;
+  if(d < 30) return `${Math.floor(d/7)} week${Math.floor(d/7)>1?'s':''} ago`;
+  return `${Math.floor(d/30)} month${Math.floor(d/30)>1?'s':''} ago`;
+}
+
+function stripHtml(html){
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return tmp.textContent || '';
+}
+
+function formatDuration(secs){
+  if(!secs) return '';
+  const s = parseInt(secs);
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60);
+  return h > 0 ? `${h}h ${m}m` : `${m} min`;
+}
+
+async function loadBlogFeed(){
+  const container = document.getElementById('blog-feed');
+  try {
+    const res = await fetch(`${RSS2JSON}${encodeURIComponent(BLOG_RSS)}&count=3`);
+    const data = await res.json();
+    if(data.status !== 'ok' || !data.items?.length) throw new Error('No posts');
+
+    container.innerHTML = data.items.map(item => {
+      const thumb = item.thumbnail || item.enclosure?.link || '';
+      const imgEl = thumb
+        ? `<img class="feed-thumb" src="${thumb}" alt="" onerror="this.style.display='none'" loading="lazy"/>`
+        : `<div class="feed-thumb-placeholder">✍️</div>`;
+      const desc = stripHtml(item.description || '').trim().slice(0, 120);
+      return `<a class="feed-card" href="${item.link}" target="_blank" rel="noopener">
+        ${imgEl}
+        <div class="feed-info">
+          <div class="feed-title">${item.title}</div>
+          <div class="feed-meta">${timeAgo(item.pubDate)}</div>
+          ${desc ? `<div class="feed-desc">${desc}…</div>` : ''}
+        </div>
+        <span class="feed-arrow">›</span>
+      </a>`;
+    }).join('');
+  } catch(e) {
+    container.innerHTML = `<div class="feed-error">
+      Couldn't load posts right now.
+      <a href="https://lifewithlexiskai.com/blog" target="_blank" style="color:var(--gold);display:block;margin-top:6px">Visit the blog →</a>
+    </div>`;
+  }
+}
+
+async function loadPodcastFeed(){
+  const container = document.getElementById('podcast-feed');
+  try {
+    const res = await fetch(`${RSS2JSON}${encodeURIComponent(POD_RSS)}&count=3`);
+    const data = await res.json();
+    if(data.status !== 'ok' || !data.items?.length) throw new Error('No episodes');
+
+    const artwork = data.feed?.image || '';
+    container.innerHTML = data.items.map(item => {
+      const thumb = artwork || item.thumbnail || '';
+      const imgEl = thumb
+        ? `<img class="feed-thumb" src="${thumb}" alt="" onerror="this.outerHTML='<div class=\'feed-thumb-placeholder\'>🎙️</div>'" loading="lazy"/>`
+        : `<div class="feed-thumb-placeholder">🎙️</div>`;
+      const dur = formatDuration(item.enclosure?.duration || item['itunes:duration']);
+      const desc = stripHtml(item.description || '').trim().slice(0, 100);
+      return `<a class="feed-card" href="${item.link || item.enclosure?.link || '#'}" target="_blank" rel="noopener">
+        ${imgEl}
+        <div class="feed-info">
+          <div class="feed-title">${item.title}</div>
+          <div class="feed-meta">${timeAgo(item.pubDate)}${dur ? ` · ${dur}` : ''}</div>
+          ${desc ? `<div class="feed-desc">${desc}…</div>` : ''}
+        </div>
+        <span class="feed-arrow" style="color:var(--gold)">▶</span>
+      </a>`;
+    }).join('');
+  } catch(e) {
+    container.innerHTML = `<div class="feed-error">
+      Couldn't load episodes right now.
+      <a href="https://open.spotify.com/show/life-with-lexis-kai" target="_blank" style="color:var(--gold);display:block;margin-top:6px">Listen on Spotify →</a>
+    </div>`;
+  }
+}
+
+// Load feeds on page start
+loadBlogFeed();
+loadPodcastFeed();
+
+// ── REFRESH FEEDS ─────────────────────────────────────────
+function refreshFeed(type){
+  const btn = document.getElementById(`${type}-refresh-btn`);
+  btn.classList.add('spinning');
+  if(type === 'blog') loadBlogFeed().finally(() => btn.classList.remove('spinning'));
+  else loadPodcastFeed().finally(() => btn.classList.remove('spinning'));
+}
+
+// ── COMMUNITY ROOMS ───────────────────────────────────────
+const ROOMS = [
+  {
+    id: 'general',
+    name: '✳️ Founding Circle',
+    sub: 'General · All cohort members',
+    type: 'general',
+    members: '15 members',
+    preview: 'Welcome to your sacred container 💫',
+    time: 'Now',
+    badge: '2',
+    seed: [
+      { user: 'Alexis Kai', initials: 'AK', mine: true,  time: '9:00 AM', text: 'Welcome to the Founding Circle, queens. This is your sacred space 💫 Introduce yourself below — your name, where you\'re from, and one word for how you\'re arriving today.' },
+      { user: 'Maya R.',    initials: 'MR', mine: false, time: '9:14 AM', text: 'Maya from Atlanta 🌹 Arriving today feeling: READY.' },
+      { user: 'Jordan L.',  initials: 'JL', mine: false, time: '9:22 AM', text: 'Jordan, Houston TX. One word: Nervous-cited 😂 Is that a word? I\'m making it one.' },
+      { user: 'Alexis Kai', initials: 'AK', mine: true,  time: '9:25 AM', text: 'Nervous-cited is absolutely a word and I love it for you 🤣✨', reaction: '❤️ 4' },
+      { user: 'Simone T.',  initials: 'ST', mine: false, time: '9:41 AM', text: 'Simone, DC. Arriving: Expansive. Something shifted just reading the welcome doc. Already crying 😭💛' },
+      { user: 'Jordan L.',  initials: 'JL', mine: false, time: '9:43 AM', text: 'Same Simone 😭 The ritual prompt hit different this morning.', reaction: '🙌 3' },
+    ]
+  },
+  ...LLLU_CONTENT.modules.map((m, i) => ({
+    id: `week${m.week}`,
+    name: `${m.emoji} Week ${m.week} — ${m.title}`,
+    sub: m.theme,
+    type: 'week',
+    members: '15 members',
+    preview: `Week ${m.week} discussion · ${m.subtitle}`,
+    time: `Wk ${m.week}`,
+    badge: i === 0 ? '3' : null,
+    seed: [
+      { user: 'Alexis Kai', initials: 'AK', mine: true,  time: 'Mon', text: `Welcome to Week ${m.week}: ${m.title} 🌟 This week we\'re going deep into ${m.theme.toLowerCase()}. Drop your biggest takeaway from the videos as you watch.` },
+      { user: 'Maya R.',    initials: 'MR', mine: false, time: 'Mon', text: `The section on "${m.topics[0]}" stopped me cold. I had to pause and journal for 20 minutes straight.` },
+      { user: 'Simone T.',  initials: 'ST', mine: false, time: 'Tue', text: `Same. That piece about ${(m.topics[1] || m.topics[0]).toLowerCase()} — I\'ve been running from that truth for years.`, reaction: '💛 5' },
+      { user: 'Jordan L.',  initials: 'JL', mine: false, time: 'Tue', text: 'Did everyone complete the ritual yet? I did mine this morning and something actually shifted. Like physically shifted.' },
+    ]
+  }))
+];
+
+let currentRoom = null;
+let localMessages = JSON.parse(localStorage.getItem('lllu_chat') || '{}');
+
+function renderRoomList(){
+  const list = document.getElementById('room-list');
+  list.innerHTML = ROOMS.map(r => `
+    <div class="room-item" onclick="openChat('${r.id}')">
+      <div class="room-avatar ${r.type}">${r.type === 'general' ? '✳️' : r.name.split(' ')[0]}</div>
+      <div class="room-info">
+        <div class="room-name">${r.name}</div>
+        <div class="room-preview">${r.preview}</div>
+      </div>
+      <div class="room-meta">
+        <span class="room-time">${r.time}</span>
+        ${r.badge ? `<span class="room-badge">${r.badge}</span>` : ''}
+      </div>
+    </div>`).join('');
+}
+renderRoomList();
+
+function openChat(roomId){
+  currentRoom = ROOMS.find(r => r.id === roomId);
+  if(!currentRoom) return;
+  document.getElementById('chat-room-name').textContent = currentRoom.name;
+  document.getElementById('chat-room-sub').textContent = currentRoom.sub;
+  document.getElementById('chat-members').textContent = currentRoom.members;
+  renderChatMessages();
+  document.getElementById('chat-view').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => {
+    const msgs = document.getElementById('chat-messages');
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 60);
+}
+
+function closeChat(){
+  document.getElementById('chat-view').classList.remove('open');
+  document.body.style.overflow = '';
+  currentRoom = null;
+}
+
+function renderChatMessages(){
+  const container = document.getElementById('chat-messages');
+  const saved = localMessages[currentRoom.id] || [];
+  const all = [...currentRoom.seed, ...saved];
+  container.innerHTML = `<div class="date-divider">Today</div>` +
+    all.map(m => `
+      <div class="msg-group">
+        <div class="msg-row ${m.mine ? 'mine' : ''}">
+          ${!m.mine ? `<div class="msg-avatar">${m.initials}</div>` : ''}
+          <div style="display:flex;flex-direction:column;align-items:${m.mine ? 'flex-end' : 'flex-start'}">
+            ${!m.mine ? `<div class="msg-sender">${m.user}</div>` : ''}
+            <div class="msg-bubble ${m.mine ? 'mine' : 'theirs'}">${m.text}</div>
+            ${m.reaction ? `<div class="msg-reaction">${m.reaction}</div>` : ''}
+            <div class="msg-time ${m.mine ? '' : 'theirs'}">${m.time}</div>
+          </div>
+        </div>
+      </div>`).join('');
+}
+
+function sendMessage(){
+  const input = document.getElementById('chat-input');
+  const text = input.textContent.trim();
+  if(!text || !currentRoom) return;
+  const now = new Date();
+  const timeStr = `${now.getHours()%12||12}:${String(now.getMinutes()).padStart(2,'0')} ${now.getHours()>=12?'PM':'AM'}`;
+  if(!localMessages[currentRoom.id]) localMessages[currentRoom.id] = [];
+  localMessages[currentRoom.id].push({ user:'Lex', initials:'LK', mine:true, time:timeStr, text });
+  localStorage.setItem('lllu_chat', JSON.stringify(localMessages));
+  input.textContent = '';
+  renderChatMessages();
+  setTimeout(() => {
+    const msgs = document.getElementById('chat-messages');
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 30);
+}
+
+function chatKeydown(e){
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }
+}
+
 // ── PAGE NAV ──────────────────────────────────────────────
-const tabMap = { home:0, modules:1, journal:2, rituals:3, hd:4 };
+const tabMap = { home:0, modules:1, journal:2, community:3, hd:4 };
 
 function showPage(name){
-  // reset module detail if leaving modules
   if(name !== 'modules'){
     document.getElementById('module-detail-view').style.display = 'none';
     document.getElementById('modules-list-view').style.display = 'block';
   }
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const pg = document.getElementById('page-' + name);
-  if(pg) pg.classList.add('active');
+  document.querySelectorAll('.community-page').forEach(p => p.classList.remove('active'));
 
-  const tabs = document.querySelectorAll('.tab');
-  const navs = document.querySelectorAll('.bnav-item');
-  tabs.forEach(t => t.classList.remove('active'));
-  navs.forEach(b => b.classList.remove('active'));
-
-  const idx = tabMap[name];
-  if(idx !== undefined){
-    if(tabs[idx]) tabs[idx].classList.add('active');
-    if(navs[idx]) navs[idx].classList.add('active');
+  if(name === 'community'){
+    document.getElementById('page-community').classList.add('active');
+  } else {
+    const pg = document.getElementById('page-' + name);
+    if(pg) pg.classList.add('active');
   }
 
-  // hide demo banner on enroll page
+  const navs = document.querySelectorAll('.bnav-item');
+  navs.forEach(b => b.classList.remove('active'));
+  const idx = tabMap[name];
+  if(idx !== undefined && navs[idx]) navs[idx].classList.add('active');
+
   document.getElementById('demo-banner').classList.toggle('hidden', name === 'enroll');
   window.scrollTo(0,0);
+}
+
+// ── PWA SERVICE WORKER ────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .catch(err => console.log('SW registration failed:', err));
+  });
 }
 </script>
 </body>
