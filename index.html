@@ -353,7 +353,7 @@
     <span class="sec-title">Latest from the Blog</span>
     <div style="display:flex;align-items:center;gap:10px">
       <button class="btn-refresh" id="blog-refresh-btn" onclick="refreshFeed('blog')" title="Refresh">↻ Refresh</button>
-      <a class="sec-link" href="https://lifewithlexiskai.com" target="_blank" rel="noopener">View all →</a>
+      <a class="sec-link" href="https://lifewithlexiskai.com/posts-page/" target="_blank" rel="noopener">View all →</a>
     </div>
   </div>
   <div class="feed-section" id="blog-feed">
@@ -365,7 +365,7 @@
     <span class="sec-title">Latest Episodes</span>
     <div style="display:flex;align-items:center;gap:10px">
       <button class="btn-refresh" id="podcast-refresh-btn" onclick="refreshFeed('podcast')" title="Refresh">↻ Refresh</button>
-      <a class="sec-link" href="https://anchor.fm/life-with-lexis-kai" target="_blank" rel="noopener">All episodes →</a>
+      <a class="sec-link" href="https://open.spotify.com/show/5HBvZR5sBRhzDkTktFjxeM" target="_blank" rel="noopener">All episodes →</a>
     </div>
   </div>
   <div class="feed-section" id="podcast-feed">
@@ -852,7 +852,8 @@ async function loadBlogFeed(){
         ? `<img class="feed-thumb" src="${thumb}" alt="" onerror="this.style.display='none'" loading="lazy"/>`
         : `<div class="feed-thumb-placeholder">✍️</div>`;
       const desc = stripHtml(item.description).trim().slice(0, 120);
-      return `<a class="feed-card" href="${item.link}" target="_blank" rel="noopener">
+      const postHref = item.link || 'https://lifewithlexiskai.com/posts-page/';
+      return `<a class="feed-card" href="${postHref}" target="_blank" rel="noopener">
         ${imgEl}
         <div class="feed-info">
           <div class="feed-title">${item.title}</div>
@@ -865,7 +866,7 @@ async function loadBlogFeed(){
   } catch(e){
     container.innerHTML = `<div class="feed-error">
       Couldn't load posts right now.
-      <a href="https://lifewithlexiskai.com/blog" target="_blank" style="color:var(--gold);display:block;margin-top:6px">Visit the blog →</a>
+      <a href="https://lifewithlexiskai.com/posts-page/" target="_blank" style="color:var(--gold);display:block;margin-top:6px">Visit the blog →</a>
     </div>`;
   }
 }
@@ -883,7 +884,7 @@ async function loadPodcastFeed(){
         : `<div class="feed-thumb-placeholder">🎙️</div>`;
       const dur = formatDuration(item.duration);
       const desc = stripHtml(item.description).trim().slice(0, 100);
-      const href = item.link || item.enclosure || '#';
+      const href = item.link || item.enclosure || 'https://open.spotify.com/show/5HBvZR5sBRhzDkTktFjxeM';
       return `<a class="feed-card" href="${href}" target="_blank" rel="noopener">
         ${imgEl}
         <div class="feed-info">
@@ -897,7 +898,7 @@ async function loadPodcastFeed(){
   } catch(e){
     container.innerHTML = `<div class="feed-error">
       Couldn't load episodes right now.
-      <a href="https://podcasters.spotify.com/pod/show/life-with-lexis-kai" target="_blank" style="color:var(--gold);display:block;margin-top:6px">Listen on Spotify →</a>
+      <a href="https://open.spotify.com/show/5HBvZR5sBRhzDkTktFjxeM" target="_blank" style="color:var(--gold);display:block;margin-top:6px">Listen on Spotify →</a>
     </div>`;
   }
 }
