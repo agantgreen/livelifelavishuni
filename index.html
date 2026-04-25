@@ -311,7 +311,7 @@
 <!-- DEMO BANNER -->
 <div class="demo-banner" id="demo-banner">
   <div class="demo-text">👋 You're viewing the <strong>demo experience</strong> — Week 1 is unlocked. <strong>15 spots</strong> · Founding Circle pricing ends June 14.</div>
-  <button class="btn-enroll" onclick="showPage('enroll')">Enroll Now</button>
+  <button class="btn-enroll" onclick="window.open('https://stan.store/lifewithlexiskai','_blank')">Enroll Now</button>
 </div>
 
 <!-- NAV TABS -->
@@ -446,11 +446,46 @@
 
 <!-- ══ ENROLL ══ -->
 <div class="page" id="page-enroll">
-  <div style="text-align:center;padding:8px 0">
-    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:6px">Founding Circle</div>
-    <div style="font-size:13px;color:var(--muted);line-height:1.5">Only 15 spots · Enrollment closes June 14<br/>Payment plans available at checkout.</div>
+  <div style="text-align:center;padding:10px 0 4px">
+    <div style="font-size:32px;margin-bottom:10px">✳️</div>
+    <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:8px">Founding Circle</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.6">Only 15 spots · Enrollment closes May 14, 2026<br/>Cohort starts May 15, 2026</div>
   </div>
-  <div id="pricing-cards"></div>
+
+  <!-- single pricing card -->
+  <div class="pricing-card featured" style="margin-top:6px">
+    <div class="pricing-badge">FOUNDING CIRCLE</div>
+    <div style="margin-top:8px">
+      <div class="pricing-tier">🌟 Live Life Lavish University</div>
+      <div style="display:flex;align-items:baseline;margin:10px 0 4px">
+        <span class="pricing-price">$197</span>
+        <span class="pricing-full" style="margin-left:10px">$444 next cohort</span>
+      </div>
+      <div style="font-size:11px;color:var(--teal);font-weight:500;margin-bottom:12px">Payment plan available: 2 × $99</div>
+    </div>
+    <div class="pricing-desc">A 6-week live spiritual activation to reclaim your purpose, align with your design, and build the lavish life you were born to lead.</div>
+    <ul class="pricing-includes">
+      <li>6 weekly live coaching sessions (TikTok + IG + YouTube)</li>
+      <li>Your personal LLLU student app — journal, rituals, HD profile, modules</li>
+      <li>Your Human Design chart decoded personally by Alexis Kai</li>
+      <li>Shadow work, ritual guides & journal prompts for all 6 weeks</li>
+      <li>Founding Circle cohort community chat</li>
+      <li>Lifetime access to all recordings</li>
+    </ul>
+    <button class="btn-join" onclick="window.open('https://stan.store/lifewithlexiskai','_blank')" style="font-size:15px;padding:14px">
+      Join the Founding Circle — $197 →
+    </button>
+    <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--muted)">
+      Payment plan at checkout · Enrollment closes May 14
+    </div>
+  </div>
+
+  <!-- guarantee note -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;text-align:center">
+    <div style="font-size:20px;margin-bottom:8px">💛</div>
+    <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;margin-bottom:6px">You don't have to wait for perfect conditions to begin.</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.6">The Founding Circle is intimate on purpose — 15 women maximum. When it's full, it's full. Next cohort opens at $444.</div>
+  </div>
 </div>
 
 <!-- ══ COMMUNITY ══ -->
@@ -714,27 +749,6 @@ function toggleRitual(key, row){
 }
 
 // ── PRICING ───────────────────────────────────────────────
-function renderPricing(){
-  const container = document.getElementById('pricing-cards');
-  container.innerHTML = LLLU_CONTENT.pricing.map(p => `
-    <div class="pricing-card ${p.featured ? 'featured' : ''}" style="margin-bottom:14px">
-      ${p.featured ? '<div class="pricing-badge">MOST POPULAR</div>' : ''}
-      ${p.spotsLeft ? `<div class="pricing-badge" style="background:var(--teal)">Only ${p.spotsLeft} left</div>` : ''}
-      <div class="pricing-tier">${p.emoji} ${p.tier}</div>
-      <div style="display:flex;align-items:baseline;margin:8px 0">
-        <span class="pricing-price">${p.price}</span>
-        <span class="pricing-full">${p.fullValue}</span>
-        <span class="pricing-discount">${p.discount}</span>
-      </div>
-      <div class="pricing-desc">${p.description}</div>
-      <ul class="pricing-includes">${p.includes.map(i => `<li>${i}</li>`).join('')}</ul>
-      <button class="btn-join ${p.featured ? '' : 'secondary'}" onclick="alert('Enrollment opens soon! Payment plans available.')">
-        Join ${p.tier} — ${p.price}
-      </button>
-    </div>`).join('');
-}
-renderPricing();
-
 // ── RSS FEEDS ─────────────────────────────────────────────
 const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
 const BLOG_RSS = 'https://lifewithlexiskai.com/feed/';
