@@ -35,7 +35,7 @@ self.addEventListener('fetch', e => {
   const url = e.request.url;
 
   // Always fetch RSS feeds and external APIs live
-  if (url.includes('rss2json') || url.includes('anchor.fm') || url.includes('lifewithlexiskai')) {
+  if (url.includes('rss2json') || url.includes('allorigins') || url.includes('anchor.fm') || url.includes('lifewithlexiskai')) {
     return; // let it go to network normally
   }
 

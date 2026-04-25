@@ -750,7 +750,6 @@ function toggleRitual(key, row){
 
 // ── PRICING ───────────────────────────────────────────────
 // ── RSS FEEDS ─────────────────────────────────────────────
-const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
 const BLOG_RSS = 'https://lifewithlexiskai.com/feed/';
 const POD_RSS  = 'https://anchor.fm/s/f336fe2c/podcast/rss';
 
@@ -777,19 +776,82 @@ function formatDuration(secs){
   return h > 0 ? `${h}h ${m}m` : `${m} min`;
 }
 
+// ── Parse raw XML into feed items ─────────────────────────
+function parseXML(xmlStr){
+  const parser = new DOMParser();
+  const xml = parser.parseFromString(xmlStr, 'text/xml');
+  const items = [...xml.querySelectorAll('item')];
+  const feedImg = xml.querySelector('channel > image > url')?.textContent
+                || xml.querySelector('channel')?.getAttribute('itunes:image')
+                || '';
+  return {
+    feedImage: feedImg,
+    items: items.slice(0, 3).map(el => {
+      const get = tag => el.querySelector(tag)?.textContent?.trim() || '';
+      const getAttr = (tag, attr) => el.querySelector(tag)?.getAttribute(attr) || '';
+      const encUrl  = getAttr('enclosure','url');
+      const encDur  = getAttr('enclosure','duration');
+      const itunesImg = el.querySelector('itunes\\:image, image')?.getAttribute('href') || '';
+      const mediaTh = getAttr('media\\:thumbnail','url') || getAttr('media\\:content','url');
+      return {
+        title:     get('title'),
+        link:      get('link') || encUrl,
+        pubDate:   get('pubDate'),
+        description: get('description') || get('itunes\\:summary') || get('content\\:encoded'),
+        thumbnail: itunesImg || mediaTh || '',
+        duration:  encDur || get('itunes\\:duration') || '',
+        enclosure: encUrl,
+      };
+    })
+  };
+}
+
+// ── Fetch via rss2json, fall back to allorigins ────────────
+async function fetchFeed(url){
+  // Try rss2json first
+  try {
+    const r1 = await fetch(
+      `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=3`,
+      { signal: AbortSignal.timeout(5000) }
+    );
+    const d = await r1.json();
+    if(d.status === 'ok' && d.items?.length){
+      return {
+        feedImage: d.feed?.image || '',
+        items: d.items.map(i => ({
+          title:       i.title,
+          link:        i.link,
+          pubDate:     i.pubDate,
+          description: i.description || i.content || '',
+          thumbnail:   i.thumbnail || i.enclosure?.link || '',
+          duration:    i.enclosure?.duration || '',
+          enclosure:   i.enclosure?.link || '',
+        }))
+      };
+    }
+  } catch(e){ /* fall through */ }
+
+  // Fall back to allorigins CORS proxy + parse XML ourselves
+  const r2 = await fetch(
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    { signal: AbortSignal.timeout(8000) }
+  );
+  const xml = await r2.text();
+  return parseXML(xml);
+}
+
+// ── Blog feed ─────────────────────────────────────────────
 async function loadBlogFeed(){
   const container = document.getElementById('blog-feed');
   try {
-    const res = await fetch(`${RSS2JSON}${encodeURIComponent(BLOG_RSS)}&count=3`);
-    const data = await res.json();
-    if(data.status !== 'ok' || !data.items?.length) throw new Error('No posts');
-
-    container.innerHTML = data.items.map(item => {
-      const thumb = item.thumbnail || item.enclosure?.link || '';
+    const { items } = await fetchFeed(BLOG_RSS);
+    if(!items.length) throw new Error('No posts');
+    container.innerHTML = items.map(item => {
+      const thumb = item.thumbnail || '';
       const imgEl = thumb
         ? `<img class="feed-thumb" src="${thumb}" alt="" onerror="this.style.display='none'" loading="lazy"/>`
         : `<div class="feed-thumb-placeholder">✍️</div>`;
-      const desc = stripHtml(item.description || '').trim().slice(0, 120);
+      const desc = stripHtml(item.description).trim().slice(0, 120);
       return `<a class="feed-card" href="${item.link}" target="_blank" rel="noopener">
         ${imgEl}
         <div class="feed-info">
@@ -800,7 +862,7 @@ async function loadBlogFeed(){
         <span class="feed-arrow">›</span>
       </a>`;
     }).join('');
-  } catch(e) {
+  } catch(e){
     container.innerHTML = `<div class="feed-error">
       Couldn't load posts right now.
       <a href="https://lifewithlexiskai.com/blog" target="_blank" style="color:var(--gold);display:block;margin-top:6px">Visit the blog →</a>
@@ -808,22 +870,21 @@ async function loadBlogFeed(){
   }
 }
 
+// ── Podcast feed ──────────────────────────────────────────
 async function loadPodcastFeed(){
   const container = document.getElementById('podcast-feed');
   try {
-    const res = await fetch(`${RSS2JSON}${encodeURIComponent(POD_RSS)}&count=3`);
-    const data = await res.json();
-    if(data.status !== 'ok' || !data.items?.length) throw new Error('No episodes');
-
-    const artwork = data.feed?.image || '';
-    container.innerHTML = data.items.map(item => {
-      const thumb = artwork || item.thumbnail || '';
+    const { feedImage, items } = await fetchFeed(POD_RSS);
+    if(!items.length) throw new Error('No episodes');
+    container.innerHTML = items.map(item => {
+      const thumb = item.thumbnail || feedImage || '';
       const imgEl = thumb
-        ? `<img class="feed-thumb" src="${thumb}" alt="" onerror="this.outerHTML='<div class=\'feed-thumb-placeholder\'>🎙️</div>'" loading="lazy"/>`
+        ? `<img class="feed-thumb" src="${thumb}" alt="" onerror="this.outerHTML='<div class=\\'feed-thumb-placeholder\\'>🎙️</div>'" loading="lazy"/>`
         : `<div class="feed-thumb-placeholder">🎙️</div>`;
-      const dur = formatDuration(item.enclosure?.duration || item['itunes:duration']);
-      const desc = stripHtml(item.description || '').trim().slice(0, 100);
-      return `<a class="feed-card" href="${item.link || item.enclosure?.link || '#'}" target="_blank" rel="noopener">
+      const dur = formatDuration(item.duration);
+      const desc = stripHtml(item.description).trim().slice(0, 100);
+      const href = item.link || item.enclosure || '#';
+      return `<a class="feed-card" href="${href}" target="_blank" rel="noopener">
         ${imgEl}
         <div class="feed-info">
           <div class="feed-title">${item.title}</div>
@@ -833,25 +894,25 @@ async function loadPodcastFeed(){
         <span class="feed-arrow" style="color:var(--gold)">▶</span>
       </a>`;
     }).join('');
-  } catch(e) {
+  } catch(e){
     container.innerHTML = `<div class="feed-error">
       Couldn't load episodes right now.
-      <a href="https://open.spotify.com/show/life-with-lexis-kai" target="_blank" style="color:var(--gold);display:block;margin-top:6px">Listen on Spotify →</a>
+      <a href="https://podcasters.spotify.com/pod/show/life-with-lexis-kai" target="_blank" style="color:var(--gold);display:block;margin-top:6px">Listen on Spotify →</a>
     </div>`;
   }
 }
 
-// Load feeds on page start
-loadBlogFeed();
-loadPodcastFeed();
-
-// ── REFRESH FEEDS ─────────────────────────────────────────
+// ── Refresh buttons ───────────────────────────────────────
 function refreshFeed(type){
   const btn = document.getElementById(`${type}-refresh-btn`);
   btn.classList.add('spinning');
   if(type === 'blog') loadBlogFeed().finally(() => btn.classList.remove('spinning'));
   else loadPodcastFeed().finally(() => btn.classList.remove('spinning'));
 }
+
+// Load feeds on page start
+loadBlogFeed();
+loadPodcastFeed();
 
 // ── COMMUNITY ROOMS ───────────────────────────────────────
 const ROOMS = [
