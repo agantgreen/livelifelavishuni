@@ -6,12 +6,19 @@
 <title>LLL U ✳️ — Live Life Lavish University</title>
 
 <!-- ── PWA ── -->
-<link rel="manifest" href="manifest.json" />
+<link rel="manifest" href="/manifest.json" />
 <meta name="theme-color" content="#1a1030" />
+
+<!-- iOS specific — these are what actually control the home screen icon on iPhone -->
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="LLL U" />
-<link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+<!-- apple-touch-icon: iOS looks for this FIRST at root, then falls back to icons/ -->
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192.png" />
+<link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512.png" />
 
 <!-- ── OG / Share preview ── -->
 <meta property="og:title" content="Live Life Lavish University" />
