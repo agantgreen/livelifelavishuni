@@ -806,37 +806,18 @@ function parseXML(xmlStr){
   };
 }
 
-// ── Fetch via rss2json, fall back to allorigins ────────────
+// ── Fetch via Netlify function (same-domain, no CORS) ─────
 async function fetchFeed(url){
-  // Try rss2json first
-  try {
-    const r1 = await fetch(
-      `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=3`,
-      { signal: AbortSignal.timeout(5000) }
-    );
-    const d = await r1.json();
-    if(d.status === 'ok' && d.items?.length){
-      return {
-        feedImage: d.feed?.image || '',
-        items: d.items.map(i => ({
-          title:       i.title,
-          link:        i.link,
-          pubDate:     i.pubDate,
-          description: i.description || i.content || '',
-          thumbnail:   i.thumbnail || i.enclosure?.link || '',
-          duration:    i.enclosure?.duration || '',
-          enclosure:   i.enclosure?.link || '',
-        }))
-      };
-    }
-  } catch(e){ /* fall through */ }
+  // Use our own Netlify function as the proxy — no CORS issues
+  const proxyUrl = `/.netlify/functions/rss?url=${encodeURIComponent(url)}`;
 
-  // Fall back to allorigins CORS proxy + parse XML ourselves
-  const r2 = await fetch(
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-    { signal: AbortSignal.timeout(8000) }
-  );
-  const xml = await r2.text();
+  const res = await fetch(proxyUrl, {
+    signal: AbortSignal.timeout(8000)
+  });
+
+  if (!res.ok) throw new Error(`Proxy returned ${res.status}`);
+
+  const xml = await res.text();
   return parseXML(xml);
 }
 

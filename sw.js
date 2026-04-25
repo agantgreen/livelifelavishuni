@@ -34,8 +34,8 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const url = e.request.url;
 
-  // Always fetch RSS feeds and external APIs live
-  if (url.includes('rss2json') || url.includes('allorigins') || url.includes('anchor.fm') || url.includes('lifewithlexiskai')) {
+  // Always fetch RSS feeds and Netlify functions live — never cache
+  if (url.includes('.netlify/functions') || url.includes('anchor.fm') || url.includes('lifewithlexiskai')) {
     return; // let it go to network normally
   }
 
